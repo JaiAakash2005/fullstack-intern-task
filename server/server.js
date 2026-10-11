@@ -12,29 +12,40 @@ const favoriteRoutes = require("./routes/favouriteRoutes");
 
 const app = express();
 app.set("trust proxy", 1);
-// Trust proxy only when you have configured a trusted reverse proxy.
-// Do not blindly enable app.set("trust proxy", true).
 
 // 1. Security headers
 app.use(helmet());
 
 // 2. CORS configuration
-const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:5173")
-  .split(",")
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+// const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:5173")
+//   .split(",")
+//   .map((origin) => origin.trim())
+//   .filter(Boolean);
+
+// app.use(
+//   cors({
+//     origin(origin, callback) {
+//       // Requests without an Origin header, such as some server tools,
+//       // are allowed. CORS is not an authentication mechanism.
+//       if (!origin || allowedOrigins.includes(origin)) {
+//         return callback(null, true);
+//       }
+
+//       return callback(new Error("Origin not allowed by CORS"));
+//     },
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+//   }),
+// );
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://template-hub-gnxtace.netlify.app",
+];
 
 app.use(
   cors({
-    origin(origin, callback) {
-      // Requests without an Origin header, such as some server tools,
-      // are allowed. CORS is not an authentication mechanism.
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      return callback(new Error("Origin not allowed by CORS"));
-    },
+    origin: allowedOrigins,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   }),
